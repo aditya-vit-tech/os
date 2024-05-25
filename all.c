@@ -1590,3 +1590,274 @@ printf("\n\n");
 }
 return 0;
 }
+
+// disk scheduling algorithms
+//1. FCFS
+#include<stdio.h>
+#include<stdlib.h>
+
+void FCFS(int arr[], int head, int size){
+    int curr_track;
+    int distance, seek_time=0;
+
+    for(int i=0;i<size; i++){
+        curr_track = arr[i];
+        distance = abs(curr_track - head);
+        seek_time +=distance;
+        head = curr_track;
+    }
+
+    printf("Total Seek Time is: %d", seek_time);
+}
+
+int main(){
+    int n, head;
+    printf("No. of tracks: ");
+    scanf("%d", &n);
+    int arr[n];
+
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Head position: ");
+    scanf("%d", &head);
+
+    FCFS(arr, head, n);
+
+    printf("\nSequence: ");
+    for(int i=0;i<n;i++)
+        printf(" %d ", arr[i]);
+
+    return 0;
+}
+
+//2. SSTF
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+void difference(int request[], int head, int diff[][2], int n) {
+    for (int i = 0; i < n; i++) {
+        diff[i][0] = abs(head - request[i]);
+    }
+}
+
+int minimum(int diff[][2], int n) {
+    int index = -1;
+    int min = INT_MAX;
+
+    for (int i = 0; i < n; i++) {
+        if (!diff[i][1] && min > diff[i][0]) {
+            min = diff[i][0];
+            index = i;
+        }
+    }
+    return index;
+}
+
+void sstf(int request[], int head, int n) {
+    if (n == 0) {
+        return;
+    }
+    
+    int diff[n][2];
+    int seekcount = 0;
+    int sequence[n + 1];
+    
+    for (int i = 0; i < n; i++) {
+        sequence[i] = head;
+        difference(request, head, diff, n);
+        int index = minimum(diff, n);
+        diff[index][1] = 1;
+        
+        seekcount += diff[index][0]; 
+        head = request[index];
+    }
+    sequence[n] = head;
+    
+    printf("Total number of seek operations = %d\n", seekcount);
+    printf("Seek sequence is:\n");
+    
+    for (int i = 0; i <= n; i++) {
+        printf("%d\n", sequence[i]);
+    }
+}
+
+int main() {
+    int n = 8;
+    int proc[] = { 176, 79, 34, 60, 92, 11, 41, 114 };
+    
+    int head = 50;
+    sstf(proc, head, n);
+    
+    return 0;
+}
+
+// 3. SCAN
+#include<stdio.h>
+#include<stdlib.h>
+
+void sort(int arr[], int size){
+    for(int i=0;i<size;i++){
+        for(int j=0;j<size;j++){
+            if(arr[i]<arr[j]){
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+}
+
+int findNearest(int arr[], int head, int size){
+    int index;
+    for(int i=0;i<size;i++){
+        if(head<arr[i]){
+            index = i;
+            break;
+        }
+    }
+
+}
+
+void scan(int arr[], int head, int size){
+    int seek_count=0;
+    int distance;
+    int current, nearest;
+    int sequence[size];
+    int count =0;
+
+    sort(arr, size);
+
+    int index = findNearest(arr, head, size);
+    nearest = arr[index];
+    printf("Nearest: %d \n",nearest);
+
+// for right side.
+    for(int i=index;i<size;i++){
+        current = arr[i];
+        sequence[count++]=current;
+        distance = abs(current-head);
+        seek_count +=distance;
+        head = current;
+    }
+
+//for remaining left side
+    if(index>0){
+        for(int i=index-1;i>=0;i--){
+            current = arr[i];
+            sequence[count++]=current;
+            distance = abs(current-head);
+            seek_count += distance;
+            head = current;
+        }
+    }
+
+    printf(" %d ", seek_count);
+    printf("\nSequence: ");
+    for(int i=0;i<size;i++){
+        printf(" %d ", sequence[i]);
+    }
+}
+
+int main(){
+    int n;
+    scanf("%d", &n);
+    int arr[n];
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+
+    int head;
+    scanf("%d", &head);
+
+    scan(arr, head, n);
+
+    return 0;
+}
+
+//4. CSCAN
+#include<stdio.h>
+#include<stdlib.h>
+
+void sort(int arr[], int n){
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(arr[i]<arr[j]){
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+}
+
+// what if head is greater than all numbers present in array
+int findNearest(int arr[], int head, int size){
+    int index;
+    for(int i=0;i<size;i++){
+        if(head<arr[i]){
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
+void cscan(int arr[], int head, int size){
+    int current, seek_time =0;
+    int sequence[size+1];
+    int count=0, distance;
+
+    sort(arr, size);
+
+    int index = findNearest(arr, head, size);
+
+// goto right track
+    for(int i=index;i<size;i++){
+        current = arr[i];
+        sequence[count++]=current;
+        distance = abs(current - head);
+        seek_time +=distance;
+        head = current;
+    }
+
+    //go back to zero 
+    current = 0;
+    sequence[count++] = current;
+    distance = abs(current-head);
+    seek_time += distance;
+    head = current;
+    
+    // start again from zero
+    for(int i=0;i<index;i++){
+        current = arr[i];
+        sequence[count++] = current;
+        distance = abs(current-head);
+        seek_time +=distance;
+        head = current;
+    }
+
+    printf(" Seek Time: %d \nSequence: ",seek_time);
+    for(int i=0;i<=size;i++){
+        printf(" %d ",sequence[i]);
+    }
+
+}
+
+int main(){
+    int n;
+    scanf("%d", &n);
+    int arr[n];
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+
+    int head;
+    scanf("%d", &head);
+
+    cscan(arr, head, n);
+
+    return 0;
+}
