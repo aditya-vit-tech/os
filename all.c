@@ -344,7 +344,8 @@ int main(){
     return 0;
 }
 
-//page replacement FIFO
+//page replacement 
+// 1. FIFO
 #include<stdio.h>
 
 void fifo(int totalPages, int pages[], int frameNo){
@@ -403,7 +404,7 @@ int main(){
     return 0;
 }
 
-//LRU
+//2. LRU
 #include<stdio.h>
 
 int findNotRecent(int pageFrame[], int pages[], int index, int total_frames){
@@ -501,7 +502,7 @@ int main(){
     return 0;
 }
 
-//optimal
+//3. optimal
 #include<stdio.h>
 
 int findNotRecent(int pageFrame[], int pages[], int index, int totalPages, int total_frames){
@@ -601,7 +602,8 @@ int main(){
     return 0;
 }
 
-//scheduling FCFS
+//Process Scheduling 
+// 1. FCFS
 #include<stdio.h>
 
 struct process
@@ -735,7 +737,7 @@ int main(){
     return 0;
 }
 
-//priority non preempt
+//2. Priority non-preempt
 #include<stdio.h>
 
 struct process
@@ -880,7 +882,7 @@ int main(){
     return 0;
 }
 
-// priority preemptive
+// 3. priority preemptive
 #include<stdio.h>
 
 struct process
@@ -1022,7 +1024,7 @@ int main(){
     return 0;
 }
 
-//round robit
+// 4. round robit
 #include<stdio.h>
 
 struct process
@@ -1120,7 +1122,7 @@ int main() {
     return 0;
 }
 
-//SJF
+//5. SJF
 #include<stdio.h>
 
 struct process
@@ -1258,7 +1260,7 @@ int main(){
 }
 
 
-//SRTF
+//6. SJF Preemptive(SRTF)
 #include <stdio.h>
 
 struct process {
@@ -1415,8 +1417,8 @@ int main() {
     return 0;
 }
 
-
-//dining philosopher
+//Synchronization
+//1. Dining philosopher
 #include<stdio.h>
 #include<stdlib.h>
 #include<pthread.h>
@@ -1467,7 +1469,7 @@ void eat(int phil){
 	printf("\nPhilosopher %d is eating",phil);
 }
 
-//producer consumer
+//2. Producer consumer
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1534,7 +1536,7 @@ pthread_join(cons, NULL);
 return 0;
 }
 
-//reader writer
+//3. Reader writer
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
